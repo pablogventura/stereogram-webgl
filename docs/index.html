@@ -8,10 +8,16 @@
 
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <link rel="icon" type="image/png" href="favicon-16x16.png" sizes="16x16">
-    <link rel="icon" type="image/png" href="favicon-32x32.png" sizes="32x32">
-    <link rel="icon" type="image/png" href="favicon-96x96.png" sizes="96x96">
-    <link rel="stylesheet" type="text/css" href="css/page.css?v=2024-02-11T15%3A01%3A41.665Z">
+    <link rel="icon" type="image/png" href="favicons/favicon-16x16.png" sizes="16x16">
+    <link rel="icon" type="image/png" href="favicons/favicon-32x32.png" sizes="32x32">
+    <link rel="icon" type="image/png" href="favicons/favicon-48x48.png" sizes="48x48">
+    <link rel="icon" type="image/png" href="favicons/favicon-60x60.png" sizes="60x60">
+    <link rel="icon" type="image/png" href="favicons/favicon-96x96.png" sizes="96x96">
+    <link rel="icon" type="image/png" href="favicons/favicon-180x180.png" sizes="180x180">
+    <link rel="icon" type="image/png" href="favicons/favicon-192x192.png" sizes="192x192">
+    <link rel="apple-touch-icon" href="favicons/apple-touch-icon-120x120-precomposed.png" sizes="120x120">
+    <link rel="apple-touch-icon" href="favicons/apple-touch-icon-152x152-precomposed.png" sizes="152x152">
+    <link rel="stylesheet" type="text/css" href="css/page.css?v=2026-11-02T02%3A30%3A17.591Z">
   </head>
 
   <body>
@@ -160,6 +166,18 @@
                     <div class="select-value" data-value="bunny">Bunny</div>
                     <div class="select-value" data-value="atomium">Atomium</div>
                   </div>
+                </div>
+              </div>
+              <div class="control" id="control-input-model-upload-button">
+                <label>Custom:</label>
+                <div class="file-control upload compact">
+                  <input type="file" name="file" id="input-model-upload-button" class="file-input" accept=".stl" />
+                  <label class="file-control-button" for="input-model-upload-button">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 32 32">
+                      <path d="M12 22L12 13 7 13 16 2 25 13 20 13 20 22ZM6 25L26 25 26 29 6 29Z" />
+                    </svg>
+                    <span data-placeholder="Upload an STL">Upload an STL</span>
+                  </label>
                 </div>
               </div>
               <div class="control" id="control-input-heightmap-upload-button">
@@ -391,13 +409,13 @@
     <script type="text/javascript">
       var Page = Page || {};
       Object.defineProperty(Page, "version", {
-        value: "2024-02-11T15%3A01%3A41.665Z",
+        value: "2026-11-02T02%3A30%3A17.591Z",
         writable: false,
       });
     </script>
-    <script src="script/page.min.js?v=2024-02-11T15%3A01%3A41.665Z"></script>
-    <script src="script/gl-matrix-2.5.1-min.js?v=2024-02-11T15%3A01%3A41.665Z"></script>
-    <script src="script/main.min.js?v=2024-02-11T15%3A01%3A41.665Z"></script>
+    <script src="script/page.min.js?v=2026-11-02T02%3A30%3A17.591Z"></script>
+    <script src="script/gl-matrix-2.5.1-min.js?v=2026-11-02T02%3A30%3A17.591Z"></script>
+    <script src="script/main.min.js?v=2026-11-02T02%3A30%3A17.591Z"></script>
   </body>
 
 </html>

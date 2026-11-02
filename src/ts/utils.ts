@@ -32,7 +32,8 @@ function createImageData(width: number, height: number, data: Uint8ClampedArray)
     }
 
     try {
-        return new ImageData(data, width, height);
+        // The DOM types reject a SharedArrayBuffer. This buffer is a plain ArrayBuffer.
+        return new ImageData(data as Uint8ClampedArray<ArrayBuffer>, width, height);
     } catch {
         console.log("Failed to create default ImageData from constructor, using Canvas2D instead...");
 

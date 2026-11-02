@@ -78,7 +78,7 @@ class Engine {
         if (shader) {
             gl.bindFramebuffer(gl.FRAMEBUFFER, null);
             Viewport.setFullCanvas(gl);
-            gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT); // tslint:disable-line:no-bitwise
+            gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
 
             shader.a["aCorner"].VBO = this.fullscreenVBO;
             shader.u["uHeightmapTexture"].value = heightmapTexture.id;

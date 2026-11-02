@@ -89,12 +89,10 @@ class Mat4 {
     public invert(): boolean {
         // shortcuts
         const m = this._val;
-        /* tslint:disable:one-variable-per-declaration */
         const m00 = m[0], m01 = m[1], m02 = m[2], m03 = m[3];
         const m10 = m[4], m11 = m[5], m12 = m[6], m13 = m[7];
         const m20 = m[8], m21 = m[9], m22 = m[10], m23 = m[11];
         const m30 = m[12], m31 = m[13], m32 = m[14], m33 = m[15];
-        /* tslint:enable:one-variable-per-declaration */
 
         const b00 = m00 * m11 - m01 * m10;
         const b01 = m00 * m12 - m02 * m10;

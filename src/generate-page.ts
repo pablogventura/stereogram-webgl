@@ -170,6 +170,13 @@ const data = {
                 {
                     type: Demopage.supportedControls.FileUpload,
                     title: "Custom",
+                    id: "input-model-upload-button",
+                    accept: [".stl"],
+                    defaultMessage: "Upload an STL"
+                },
+                {
+                    type: Demopage.supportedControls.FileUpload,
+                    title: "Custom",
                     id: "input-heightmap-upload-button",
                     accept: [".png", ".jpg", ".bmp", ".webp"],
                     defaultMessage: "Upload a depth map"
@@ -351,7 +358,7 @@ const buildResult = Demopage.build(data, DEST_DIR, {
 });
 
 // disable linting on this file because it is generated
-buildResult.pageScriptDeclaration = "/* tslint:disable */\n" + buildResult.pageScriptDeclaration;
+buildResult.pageScriptDeclaration = "/* eslint-disable */\n" + buildResult.pageScriptDeclaration;
 
 const SCRIPT_DECLARATION_FILEPATH = path.join(SRC_DIR, "ts", "page-interface-generated.ts");
 fs.writeFileSync(SCRIPT_DECLARATION_FILEPATH, buildResult.pageScriptDeclaration);

@@ -8,7 +8,8 @@ uniform vec2 uTileScaling;
 uniform float uShowUV;
 uniform float uMainStripe;
 
-varying vec2 vPosition;uniform sampler2D uHeightmapTexture;
+varying vec2 vPosition;
+uniform sampler2D uHeightmapTexture;
 
 uniform float uDepthFactor;
 uniform float uInvertHeightmap;

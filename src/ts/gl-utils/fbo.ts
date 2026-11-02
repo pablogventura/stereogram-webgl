@@ -1,5 +1,5 @@
-import GLResource from "./gl-resource";
-import Viewport from "./viewport";
+import { GLResource } from "./gl-resource";
+import { Viewport } from "./viewport";
 
 class FBO extends GLResource {
     public static bindDefault(gl: WebGLRenderingContext, viewport: Viewport = null): void {
@@ -32,14 +32,14 @@ class FBO extends GLResource {
         gl.viewport(0, 0, this.width, this.height);
 
         for (let i = 0; i < colorBuffers.length; ++i) {
-          gl.framebufferTexture2D(
-            gl.FRAMEBUFFER, gl["COLOR_ATTACHMENT" + i], gl.TEXTURE_2D, colorBuffers[i], 0);
+            gl.framebufferTexture2D(
+                gl.FRAMEBUFFER, gl["COLOR_ATTACHMENT" + i], gl.TEXTURE_2D, colorBuffers[i], 0);
         }
 
         if (depthBuffer) {
-          gl.bindRenderbuffer(gl.RENDERBUFFER, depthBuffer);
-          gl.framebufferRenderbuffer(
-            gl.FRAMEBUFFER, gl.DEPTH_ATTACHMENT, gl.RENDERBUFFER, depthBuffer);
+            gl.bindRenderbuffer(gl.RENDERBUFFER, depthBuffer);
+            gl.framebufferRenderbuffer(
+                gl.FRAMEBUFFER, gl.DEPTH_ATTACHMENT, gl.RENDERBUFFER, depthBuffer);
         }
     }
 
@@ -49,4 +49,6 @@ class FBO extends GLResource {
     }
 }
 
-export default FBO;
+export {
+    FBO,
+};

@@ -15,6 +15,12 @@ interface IScenePreset {
     model?: ObjModel; // "undefined" if not loaded, null if loading, ObjModel if loaded
 }
 
+const CUSTOM_VIEW = {
+    cameraPosition: [-2, 0, -1] as [number, number, number],
+    nearPlane: 1.3,
+    farPlane: 3,
+};
+
 const presets: { [id: string]: IScenePreset } = {
     "primitives": {
         modelName: "primitives.obj",
@@ -52,6 +58,7 @@ declare const mat4: any;
 
 class Scene {
     private readonly _depthMap: RenderToTextureWithDepth;
+    private customModel: ObjModel | null = null;
 
     private readonly modelMatrix: any;
     private readonly viewMatrix: any;
@@ -74,45 +81,85 @@ class Scene {
             shader.u["uMVPMatrix"].value = this.mvpMatrix;
             this.shader = shader;
         });
+
+        Parameters.customMeshObservers.push((positions: Float32Array | null) => {
+            this.setCustomMesh(positions);
+        });
     }
 
     public computeDepthMap(width: number, height: number): void {
-        if (this.shader) {
-            const modelPreset = presets[Parameters.modelId];
-
-            mat4.lookAt(this.viewMatrix, modelPreset.cameraPosition, [0, 0, 0], [0, 0, 1]);
-
-            mat4.fromRotation(this.modelMatrix, 0.0005 * performance.now(), [0, 0, 1]);
-            mat4.multiply(this.mvMatrix, this.viewMatrix, this.modelMatrix);
-
-            mat4.perspective(this.projectionMatrix, 45, width / height, modelPreset.nearPlane, modelPreset.farPlane);
-            mat4.multiply(this.mvpMatrix, this.projectionMatrix, this.mvMatrix);
-
-            this._depthMap.reserveSpace(width, height);
-            gl.bindFramebuffer(gl.FRAMEBUFFER, this._depthMap.framebuffer);
-            gl.viewport(0, 0, this._depthMap.width, this._depthMap.height);
-            gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT); // tslint:disable-line:no-bitwise
-
-            if (typeof modelPreset.model === "undefined") {
-                modelPreset.model = null;
-                const loadedModelId = Parameters.modelId;
-                asyncLoadObjModel(modelPreset.modelName, (model: ObjModel) => {
-                    if (loadedModelId === Parameters.modelId) { // this method is called asynchronously, so check that this is still the model we want
-                        modelPreset.model = model;
-                    }
-                });
-            }
-
-            if (modelPreset.model) {
-                const model = modelPreset.model;
-
-                this.shader.a["aVertice"].VBO = model.VBO;
-                this.shader.use();
-                this.shader.bindUniformsAndAttributes();
-
-                gl.drawArrays(gl.TRIANGLES, 0, 3 * model.trianglesCount);
-            }
+        if (!this.shader) {
+            return;
         }
+
+        const view = this.resolveView();
+        if (!view) {
+            return;
+        }
+
+        mat4.lookAt(this.viewMatrix, view.cameraPosition, [0, 0, 0], [0, 0, 1]);
+
+        mat4.fromRotation(this.modelMatrix, 0.0005 * performance.now(), [0, 0, 1]);
+        mat4.multiply(this.mvMatrix, this.viewMatrix, this.modelMatrix);
+
+        mat4.perspective(this.projectionMatrix, 45, width / height, view.nearPlane, view.farPlane);
+        mat4.multiply(this.mvpMatrix, this.projectionMatrix, this.mvMatrix);
+
+        this._depthMap.reserveSpace(width, height);
+        gl.bindFramebuffer(gl.FRAMEBUFFER, this._depthMap.framebuffer);
+        gl.viewport(0, 0, this._depthMap.width, this._depthMap.height);
+        gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
+
+        const model = this.resolveModel();
+        if (model) {
+            this.shader.a["aVertice"].VBO = model.VBO;
+            this.shader.use();
+            this.shader.bindUniformsAndAttributes();
+
+            gl.drawArrays(gl.TRIANGLES, 0, 3 * model.trianglesCount);
+        }
+    }
+
+    private setCustomMesh(positions: Float32Array | null): void {
+        if (this.customModel) {
+            this.customModel.VBO.freeGLResources();
+            this.customModel = null;
+        }
+
+        if (positions) {
+            this.customModel = new ObjModel(positions);
+        }
+    }
+
+    private resolveView(): { cameraPosition: [number, number, number]; nearPlane: number; farPlane: number } | null {
+        if (!Parameters.modelId) {
+            return CUSTOM_VIEW;
+        }
+
+        return presets[Parameters.modelId] ?? null;
+    }
+
+    private resolveModel(): ObjModel | null {
+        if (!Parameters.modelId) {
+            return this.customModel;
+        }
+
+        const modelPreset = presets[Parameters.modelId];
+        if (!modelPreset) {
+            return null;
+        }
+
+        if (typeof modelPreset.model === "undefined") {
+            modelPreset.model = null;
+            const loadedModelId = Parameters.modelId;
+            asyncLoadObjModel(modelPreset.modelName, (loaded: ObjModel) => {
+                if (loadedModelId === Parameters.modelId) { // this method is called asynchronously, so check that this is still the model we want
+                    modelPreset.model = loaded;
+                }
+            });
+        }
+
+        return modelPreset.model ?? null;
     }
 
     public get depthMap(): RenderToTextureWithDepth {

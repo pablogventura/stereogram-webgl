@@ -1,4 +1,5 @@
 import * as Loader from "./loader";
+import { parseStl } from "./stl-model";
 
 import "./page-interface-generated";
 
@@ -16,6 +17,7 @@ const controlId = {
     HEIGHTMAP_MODE_TABS: "heightmap-mode-tabs-id",
     HEIGHTMAP_PRESET_SELECT: "heightmap-preset-select-id",
     MODEL_PRESET_SELECT: "model-preset-select-id",
+    MODEL_UPLOAD_BUTTON: "input-model-upload-button",
     DEPTH_RANGE: "depth-range-id",
     HEIGHTMAP_INVERT_CHECKBOX: "invert-heightmap-checkbox-id",
     SHOW_HEIGHTMAP: "show-heightmap-checkbox-id",
@@ -30,8 +32,11 @@ const controlId = {
     IMAGE_DOWNLOAD: "image-download-id",
 };
 
+const STL_ERROR_ID = "stl-model-error";
+
 type Observer = () => unknown;
 type ImageUploadObserver = (image: HTMLImageElement) => unknown;
+type CustomMeshObserver = (positions: Float32Array | null) => unknown;
 
 function callObservers(observers: Observer[]): void {
     for (const observer of observers) {
@@ -71,6 +76,7 @@ enum EStripesMode {
 abstract class Parameters {
     public static readonly tileChangeObservers: ImageUploadObserver[] = [];
     public static readonly heightmapChangeObservers: ImageUploadObserver[] = [];
+    public static readonly customMeshObservers: CustomMeshObserver[] = [];
 
     public static readonly redrawObservers: Observer[] = [];
     public static readonly recomputeNoiseTileObservers: Observer[] = [];
@@ -162,6 +168,7 @@ function updateControlsVisibility(): void {
     Page.Controls.setVisibility(controlId.HEIGHTMAP_PRESET_SELECT, !isMovingMode);
     Page.Controls.setVisibility(controlId.HEIGHTMAP_UPLOAD_BUTTON, !isMovingMode);
     Page.Controls.setVisibility(controlId.MODEL_PRESET_SELECT, isMovingMode);
+    Page.Controls.setVisibility(controlId.MODEL_UPLOAD_BUTTON, isMovingMode);
 }
 
 
@@ -270,6 +277,55 @@ function updateIndicatorsVisibility(): void {
 }
 Page.Checkbox.addObserver(controlId.SHOW_INDICATORS_CHECKBOX, updateIndicatorsVisibility);
 updateIndicatorsVisibility();
+
+function notifyCustomMesh(positions: Float32Array | null): void {
+    for (const observer of Parameters.customMeshObservers) {
+        observer(positions);
+    }
+    callRedrawObservers();
+}
+
+function reportStlError(message: string): void {
+    Page.FileControl.clearFileUpload(controlId.MODEL_UPLOAD_BUTTON);
+    Page.Demopage.setErrorMessage(STL_ERROR_ID, message);
+}
+
+Page.Select.addObserver(controlId.MODEL_PRESET_SELECT, () => {
+    const preset = Page.Select.getValue(controlId.MODEL_PRESET_SELECT);
+    if (preset) {
+        Page.FileControl.clearFileUpload(controlId.MODEL_UPLOAD_BUTTON);
+        notifyCustomMesh(null);
+    }
+});
+
+Page.FileControl.addUploadObserver(controlId.MODEL_UPLOAD_BUTTON, (filesList: FileList) => {
+    if (filesList.length !== 1) {
+        return;
+    }
+
+    const reader = new FileReader();
+    reader.onerror = () => {
+        reportStlError("The STL file could not be read.");
+    };
+    reader.onload = () => {
+        const buffer = reader.result;
+        if (!(buffer instanceof ArrayBuffer)) {
+            reportStlError("The STL file could not be read.");
+            return;
+        }
+
+        try {
+            const positions = parseStl(buffer);
+            notifyCustomMesh(positions);
+            Page.Demopage.removeErrorMessage(STL_ERROR_ID);
+            Page.Select.setValue(controlId.MODEL_PRESET_SELECT, null);
+        } catch (error) {
+            const message = error instanceof Error ? error.message : "The STL file could not be read.";
+            reportStlError(message);
+        }
+    };
+    reader.readAsArrayBuffer(filesList[0]);
+});
 
 updateControlsVisibility();
 
