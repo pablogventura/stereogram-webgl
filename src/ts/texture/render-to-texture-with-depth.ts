@@ -15,7 +15,7 @@ class RenderToTextureWithDepth extends RenderToTexture {
         if (extension) {
             this.depthTexture = gl.createTexture();
         } else {
-            Page.Demopage.setErrorMessage("WEBGL_depth_texture-unavailable", "WebGL extension 'WEBGL_depth_texture' is not available.");
+            Page.Demopage.setErrorMessage("WEBGL_depth_texture-unavailable", "La extensión de WebGL 'WEBGL_depth_texture' no está disponible.");
         }
     }
 

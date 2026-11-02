@@ -18,7 +18,7 @@ function asyncLoadShader(name: string, vertexFilename: string, fragmentFilename:
         if (builtShader !== null) {
             callback(builtShader);
         } else {
-            Page.Demopage.setErrorMessage(`${name}-shader-error`, `Failed to build '${name}' shader.`);
+            Page.Demopage.setErrorMessage(`${name}-shader-error`, `No se pudo compilar el shader '${name}'.`);
         }
     });
 }

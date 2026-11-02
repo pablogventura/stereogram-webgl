@@ -4,12 +4,12 @@ import * as path from "path";
 import { Demopage } from "webpage-templates";
 
 const data = {
-    title: "Stereogram",
-    description: "Stereogram (aka Magic Eye) online generator running on GPU with WebGL.",
+    title: "Estereograma",
+    description: "Generador de estereogramas (también conocidos como Magic Eye) que corre en la GPU con WebGL.",
     introduction: [
-        "An autostereogram (also known as Magic Eye) is a 2D image designed to create the illusion of 3D. In each image, there is a 3D object that can only be viewed by looking at the image a certain way, as if the screen was transparent and you looked at the wall behind it. It gets easier with practice.",
-        "Autostereograms were very popular in the '90s. They take advantage of stereopsis: the brain tries to reconstruct depth by combining the two slightly different images perceived by each eye.",
-        "In this project, you can use your own depth map, customize the tiles as well as the way the image is computed. It all runs on GPU and can also handle live moving scenes in real time."
+        "Un autoestereograma (también conocido como Magic Eye) es una imagen 2D hecha para crear la ilusión de 3D. En cada imagen hay un objeto 3D que solo se ve si mirás la imagen de cierta manera, como si la pantalla fuera transparente y estuvieras mirando la pared de atrás. Con la práctica se vuelve más fácil.",
+        "Los autoestereogramas fueron muy populares en los años 90. Aprovechan la estereopsis: el cerebro reconstruye la profundidad combinando las dos imágenes levemente distintas que percibe cada ojo.",
+        "En este proyecto podés usar tu propio mapa de profundidad, personalizar los patrones y la forma en que se calcula la imagen. Todo corre en la GPU y también puede mostrar escenas en movimiento en tiempo real."
     ],
     githubProjectName: "stereogram-webgl",
     readme: {
@@ -17,7 +17,7 @@ const data = {
         branchName: "main"
     },
     additionalLinks: [
-        { href: "https://piellardj.github.io/stereogram-solver/", text: "See my Magic Eye solver here." },
+        { href: "https://piellardj.github.io/stereogram-solver/", text: "Mirá el solver de Magic Eye acá." },
     ],
     styleFiles: [],
     scriptFiles: [
@@ -31,11 +31,11 @@ const data = {
         },
         {
             id: "stripes-count-indicator",
-            label: "Stripes count"
+            label: "Franjas"
         },
         {
             id: "tilesize-indicator",
-            label: "Tile size"
+            label: "Tamaño del patrón"
         },
     ],
     canvas: {
@@ -45,17 +45,17 @@ const data = {
     },
     controlsSections: [
         {
-            title: "Depth map",
+            title: "Mapa de profundidad",
             controls: [
                 {
                     type: Demopage.supportedControls.Checkbox,
-                    title: "Show greyscale",
+                    title: "Mostrar escala de grises",
                     id: "show-heightmap-checkbox-id",
                     checked: false,
                 },
                 {
                     type: Demopage.supportedControls.Range,
-                    title: "Depth",
+                    title: "Profundidad",
                     id: "depth-range-id",
                     min: 0,
                     max: 1,
@@ -64,57 +64,57 @@ const data = {
                 },
                 {
                     type: Demopage.supportedControls.Checkbox,
-                    title: "Invert",
+                    title: "Invertir",
                     id: "invert-heightmap-checkbox-id",
                     checked: false,
                 },
                 {
                     type: Demopage.supportedControls.Tabs,
-                    title: "Mode",
+                    title: "Modo",
                     id: "heightmap-mode-tabs-id",
                     unique: true,
                     options: [
                         {
-                            label: "Still",
+                            label: "Quieto",
                             value: "still",
                             checked: true,
                         },
                         {
-                            label: "Moving",
+                            label: "En movimiento",
                             value: "moving",
                         },
                     ]
                 },
                 {
                     type: Demopage.supportedControls.Select,
-                    title: "Preset",
+                    title: "Predefinido",
                     id: "heightmap-preset-select-id",
-                    placeholder: "Custom",
+                    placeholder: "Personalizado",
                     options: [
                         {
                             value: "planet.png",
-                            label: "Planet",
+                            label: "Planeta",
                             checked: true,
                         },
                         {
                             value: "bumps.png",
-                            label: "Bumps",
+                            label: "Relieves",
                         },
                         {
                             value: "smile.png",
-                            label: "Smile",
+                            label: "Sonrisa",
                         },
                         {
                             value: "hand.png",
-                            label: "Hand",
+                            label: "Mano",
                         },
                         {
                             value: "ripple.png",
-                            label: "Ripple",
+                            label: "Onda",
                         },
                         {
                             value: "head.png",
-                            label: "Head",
+                            label: "Cabeza",
                         },
                         {
                             value: "atomium.png",
@@ -122,44 +122,44 @@ const data = {
                         },
                         {
                             value: "car.png",
-                            label: "Car",
+                            label: "Auto",
                         },
                         {
                             value: "dolphin.png",
-                            label: "Dolphin",
+                            label: "Delfín",
                         },
                         {
                             value: "tree.png",
-                            label: "Tree",
+                            label: "Árbol",
                         },
                         {
                             value: "ship.png",
-                            label: "Ship",
+                            label: "Barco",
                         }
                     ]
                 },
                 {
                     type: Demopage.supportedControls.Select,
-                    title: "Preset",
+                    title: "Predefinido",
                     id: "model-preset-select-id",
-                    placeholder: "Custom",
+                    placeholder: "Personalizado",
                     options: [
                         {
                             value: "primitives",
-                            label: "Primitives",
+                            label: "Primitivas",
                             checked: true,
                         },
                         {
                             value: "cube",
-                            label: "Cube",
+                            label: "Cubo",
                         },
                         {
                             value: "monkey",
-                            label: "Monkey",
+                            label: "Mono",
                         },
                         {
                             value: "bunny",
-                            label: "Bunny",
+                            label: "Conejo",
                         },
                         {
                             value: "atomium",
@@ -169,77 +169,76 @@ const data = {
                 },
                 {
                     type: Demopage.supportedControls.FileUpload,
-                    title: "Custom",
+                    title: "Personalizado",
                     id: "input-model-upload-button",
                     accept: [".stl"],
-                    defaultMessage: "Upload an STL"
+                    defaultMessage: "Subir un STL"
                 },
                 {
                     type: Demopage.supportedControls.FileUpload,
-                    title: "Custom",
+                    title: "Personalizado",
                     id: "input-heightmap-upload-button",
                     accept: [".png", ".jpg", ".bmp", ".webp"],
-                    defaultMessage: "Upload a depth map"
+                    defaultMessage: "Subir un mapa de profundidad"
                 },
             ]
         },
         {
-            title: "Tile",
+            title: "Patrón",
             controls: [
                 {
                     type: Demopage.supportedControls.Tabs,
-                    title: "Mode",
+                    title: "Modo",
                     id: "tile-mode-tabs-id",
                     unique: true,
                     options: [
                         {
-                            label: "Texture",
+                            label: "Textura",
                             value: "texture",
                             checked: true,
                         },
                         {
-                            label: "Noise",
+                            label: "Ruido",
                             value: "noise"
                         },
                     ]
                 },
                 {
                     type: Demopage.supportedControls.Select,
-                    title: "Preset",
+                    title: "Predefinido",
                     id: "tile-preset-select-id",
-                    placeholder: "Custom",
+                    placeholder: "Personalizado",
                     options: [
                         {
                             value: "wallpaper.png",
-                            label: "Wallpaper",
+                            label: "Empapelado",
                         },
-                        
                         {
                             value: "space.png",
-                            label: "Space",
+                            label: "Espacio",
                             checked: true,
                         },
                         {
                             value: "foliage.png",
-                            label: "Foliage",
+                            label: "Follaje",
                         },
                         {
                             value: "giraffe.png",
-                            label: "Giraffe",
+                            label: "Jirafa",
                         },
                         {
                             value: "stones.png",
-                            label: "Stones",
+                            label: "Piedras",
                         },
                         {
                             value: "leaves.png",
-                            label: "Leaves",
+                            label: "Hojas",
                         }
                     ]
                 },
                 {
                     type: Demopage.supportedControls.Range,
-                    title: "Resolution",
+                    title: "Resolución",
                     id: "tile-noise-resolution-range-id",
                     min: 8,
                     max: 64,
@@ -248,65 +247,65 @@ const data = {
                 },
                 {
                     type: Demopage.supportedControls.Checkbox,
-                    title: "Square",
+                    title: "Cuadrado",
                     id: "tile-noise-square-checkbox-id",
                     checked: true,
                 },
                 {
                     type: Demopage.supportedControls.Checkbox,
-                    title: "Colored",
+                    title: "Color",
                     id: "tile-noise-colored-checkbox-id",
                     checked: true,
                 },
                 {
                     type: Demopage.supportedControls.FileUpload,
-                    title: "Custom",
+                    title: "Personalizado",
                     id: "input-tile-upload-button",
                     accept: [".png", ".jpg", ".bmp", ".webp"],
-                    defaultMessage: "Upload a pattern"
+                    defaultMessage: "Subir un patrón"
                 },
             ]
         },
         {
-            title: "Stripes",
+            title: "Franjas",
             controls: [
                 {
                     type: Demopage.supportedControls.Tabs,
-                    title: "Main stripe",
+                    title: "Franja principal",
                     id: "main-stripe-tabs-id",
                     unique: true,
                     options: [
                         {
                             value: "left",
-                            label: "Left",
+                            label: "Izquierda",
                         },
                         {
                             value: "middle",
-                            label: "Middle (beta)",
+                            label: "Centro (beta)",
                             checked: true,
                         },
                     ]
                 },
                 {
                     type: Demopage.supportedControls.Tabs,
-                    title: "Mode",
+                    title: "Modo",
                     id: "stripes-mode-tabs-id",
                     unique: true,
                     options: [
                         {
                             value: "adaptative",
-                            label: "Adaptative",
+                            label: "Adaptativo",
                             checked: true,
                         },
                         {
                             value: "fixed",
-                            label: "Fixed",
+                            label: "Fijo",
                         },
                     ]
                 },
                 {
                     type: Demopage.supportedControls.Range,
-                    title: "Stripes width",
+                    title: "Ancho de franja",
                     id: "stripes-width-range-id",
                     min: 20,
                     max: 200,
@@ -315,7 +314,7 @@ const data = {
                 },
                 {
                     type: Demopage.supportedControls.Range,
-                    title: "Stripes count",
+                    title: "Cantidad de franjas",
                     id: "stripes-count-range-id",
                     min: 8,
                     max: 24,
@@ -324,25 +323,25 @@ const data = {
                 },
                 {
                     type: Demopage.supportedControls.Checkbox,
-                    title: "Show UV",
+                    title: "Mostrar UV",
                     id: "show-uv-checkbox-id",
                     checked: false,
                 },
             ]
         },
         {
-            title: "Output",
+            title: "Salida",
             controls: [
                 {
                     type: Demopage.supportedControls.Checkbox,
-                    title: "Show indicators",
+                    title: "Mostrar indicadores",
                     id: "show-indicators-checkbox-id",
                     checked: false,
                 },
                 {
                     type: Demopage.supportedControls.FileDownload,
                     id: "image-download-id",
-                    label: "Download image"
+                    label: "Descargar imagen"
                 }
             ]
         }
@@ -364,3 +363,32 @@ const SCRIPT_DECLARATION_FILEPATH = path.join(SRC_DIR, "ts", "page-interface-gen
 fs.writeFileSync(SCRIPT_DECLARATION_FILEPATH, buildResult.pageScriptDeclaration);
 
 fse.copySync(path.join(SRC_DIR, "static"), DEST_DIR);
+
+const SITE_ORIGIN = "https://pablogventura.github.io/stereogram-webgl";
+const REPO_URL = "https://github.com/pablogventura/stereogram-webgl";
+
+function localizeGeneratedHtml(filepath: string): void {
+    const replacements: Array<[string, string]> = [
+        ["lang=\"en\"", "lang=\"es\""],
+        ["https://github.com/piellardj/stereogram-webgl", REPO_URL],
+        ["https://piellardj.github.io/stereogram-webgl", SITE_ORIGIN],
+        ["More on GitHub", "Más en GitHub"],
+        [">Explanations<", ">Explicaciones<"],
+        [" - Explanations", " - Explicaciones"],
+        ["You need to enable Javascript to run this experiment.", "Tenés que activar JavaScript para usar esta página."],
+        ["title=\"Home\"", "title=\"Inicio\""],
+        ["aria-label=\"Home\"", "aria-label=\"Inicio\""],
+        ["title=\"Live project\"", "title=\"Ver en vivo\""],
+        ["aria-label=\"Live project\"", "aria-label=\"Ver en vivo\""],
+        ["Readme page of my project 'Estereograma'.", "Página de explicaciones del proyecto 'Estereograma'."],
+    ];
+
+    let html = fs.readFileSync(filepath, "utf8");
+    for (const [from, to] of replacements) {
+        html = html.split(from).join(to);
+    }
+    fs.writeFileSync(filepath, html);
+}
+
+localizeGeneratedHtml(path.join(DEST_DIR, "index.html"));
+localizeGeneratedHtml(path.join(DEST_DIR, "readme", "index.html"));

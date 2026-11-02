@@ -25,7 +25,7 @@ function isBinaryStl(buffer: ArrayBuffer): boolean {
 
 function assertTriangleCount(triangleCount: number): void {
     if (triangleCount > MAX_TRIANGLES) {
-        throw new StlParseError("The STL file has too many triangles.");
+        throw new StlParseError("El archivo STL tiene demasiados triángulos.");
     }
 }
 
@@ -65,14 +65,14 @@ function parseAsciiStl(buffer: ArrayBuffer): Float32Array {
 
         const parts = line.split(/\s+/);
         if (parts.length < 4) {
-            throw new StlParseError("The STL file contains an invalid vertex.");
+            throw new StlParseError("El archivo STL tiene un vértice inválido.");
         }
 
         const x = Number(parts[1]);
         const y = Number(parts[2]);
         const z = Number(parts[3]);
         if (!Number.isFinite(x) || !Number.isFinite(y) || !Number.isFinite(z)) {
-            throw new StlParseError("The STL file contains an invalid vertex.");
+            throw new StlParseError("El archivo STL tiene un vértice inválido.");
         }
 
         values.push(x, y, z);
@@ -107,7 +107,7 @@ function normalizePositions(positions: Float32Array): Float32Array {
     const centerZ = (minZ + maxZ) / 2;
     const longestSide = Math.max(maxX - minX, maxY - minY, maxZ - minZ);
     if (!Number.isFinite(longestSide)) {
-        throw new StlParseError("The STL file contains an invalid vertex.");
+        throw new StlParseError("El archivo STL tiene un vértice inválido.");
     }
 
     const scale = longestSide > 0 ? NORMALIZED_SIZE / longestSide : 1;
@@ -123,7 +123,7 @@ function normalizePositions(positions: Float32Array): Float32Array {
 function parseStl(buffer: ArrayBuffer): Float32Array {
     const positions = isBinaryStl(buffer) ? parseBinaryStl(buffer) : parseAsciiStl(buffer);
     if (positions.length === 0 || positions.length % 9 !== 0) {
-        throw new StlParseError("The STL file does not contain any triangles.");
+        throw new StlParseError("El archivo STL no tiene triángulos.");
     }
 
     return normalizePositions(positions);

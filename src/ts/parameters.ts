@@ -305,12 +305,12 @@ Page.FileControl.addUploadObserver(controlId.MODEL_UPLOAD_BUTTON, (filesList: Fi
 
     const reader = new FileReader();
     reader.onerror = () => {
-        reportStlError("The STL file could not be read.");
+        reportStlError("No se pudo leer el archivo STL.");
     };
     reader.onload = () => {
         const buffer = reader.result;
         if (!(buffer instanceof ArrayBuffer)) {
-            reportStlError("The STL file could not be read.");
+            reportStlError("No se pudo leer el archivo STL.");
             return;
         }
 
@@ -320,7 +320,7 @@ Page.FileControl.addUploadObserver(controlId.MODEL_UPLOAD_BUTTON, (filesList: Fi
             Page.Demopage.removeErrorMessage(STL_ERROR_ID);
             Page.Select.setValue(controlId.MODEL_PRESET_SELECT, null);
         } catch (error) {
-            const message = error instanceof Error ? error.message : "The STL file could not be read.";
+            const message = error instanceof Error ? error.message : "No se pudo leer el archivo STL.";
             reportStlError(message);
         }
     };

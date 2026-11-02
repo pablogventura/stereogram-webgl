@@ -14,12 +14,12 @@ function initGL(flags?: object): boolean {
     if (gl == null) {
         gl = canvas.getContext("experimental-webgl", flags) as WebGLRenderingContext;
         if (gl == null) {
-            setError("Your browser or device does not seem to support WebGL.");
+            setError("Tu navegador o dispositivo no parece soportar WebGL.");
             return false;
         }
 
-        setError(`Your browser or device only supports experimental WebGL.
-The simulation may not run as expected.`);
+        setError(`Tu navegador o dispositivo solo soporta WebGL experimental.
+Puede que la simulación no funcione como se espera.`);
     }
 
     gl.disable(gl.CULL_FACE);

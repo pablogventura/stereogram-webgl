@@ -1,137 +1,137 @@
 # stereogram-webgl
-An autostereogram (also known as Magic Eye) is a 2D image designed to create the illusion of 3D. In each image, there is a 3D object that can only be viewed by looking at the image a certain way, as if the screen was transparent and you looked at the wall behind it. It gets easier with practice.
+Un autoestereograma (también conocido como Magic Eye) es una imagen 2D hecha para crear la ilusión de 3D. En cada imagen hay un objeto 3D que solo se ve si mirás la imagen de cierta manera, como si la pantalla fuera transparente y estuvieras mirando la pared de atrás. Con la práctica se vuelve más fácil.
 
-Autostereograms were very popular in the '90s. They take advantage of stereopsis: the brain tries to reconstruct depth by combining the two slightly different images perceived by each eye.
+Los autoestereogramas fueron muy populares en los años 90. Aprovechan la estereopsis: el cerebro reconstruye la profundidad combinando las dos imágenes levemente distintas que percibe cada ojo.
 
-In this project, you can use your own depth map, customize the tiles as well as the way the image is computed. It all runs on GPU and can also handle live moving scenes in real time.
+En este proyecto podés usar tu propio mapa de profundidad, personalizar los patrones y la forma en que se calcula la imagen. Todo corre en la GPU y también puede mostrar escenas en movimiento en tiempo real.
 
-See it live [here](https://piellardj.github.io/stereogram-webgl/).
+Miralo en vivo [acá](https://pablogventura.github.io/stereogram-webgl/).
 
-See my Magic Eye solver [here](https://piellardj.github.io/stereogram-solver/).
+Mirá el solver de Magic Eye [acá](https://piellardj.github.io/stereogram-solver/).
 
-[![Donate](https://raw.githubusercontent.com/piellardj/piellardj.github.io/master/images/readme/donate-paypal.svg)](https://www.paypal.com/donate/?hosted_button_id=AF7H7GEJTL95E)
+[![Donar](https://raw.githubusercontent.com/piellardj/piellardj.github.io/master/images/readme/donate-paypal.svg)](https://www.paypal.com/donate/?hosted_button_id=AF7H7GEJTL95E)
 
-## Preview
+## Vista previa
 
-![Planet](src/readme/preview_planet.jpg)
+![Planeta](src/readme/preview_planet.jpg)
 
-![Ship](src/readme/preview_ship.jpg)
+![Barco](src/readme/preview_ship.jpg)
 
-![Ripple](src/readme/preview_ripple.jpg)
+![Onda](src/readme/preview_ripple.jpg)
 
-## How to see a stereogram image
-### Instructions
-Seeing the 3D scene hidden in a stereogram image takes a bit of practice. The key is to look beyond the image, and not focus the image itself. There are several techniques to do it:
-- if you are able to, just consciously relax your eyes like if you were looking in the distance
-- another technique is to start with your head very close to the screen, so close that you cannot focus it. At this point your eyes should naturally look in the distance. Then move your head back slowly, and don't look at the screen: try to keep your eyes looking in the vague
-- another one is to use an object like a pen: place it behind your screen, on the side so you can see it. Keep staring at it, and move it slowly towards the center of the screen. This should help you look beyond the screen.
+## Cómo ver un estereograma
+### Instrucciones
+Ver la escena 3D escondida en un estereograma pide un poco de práctica. La clave es mirar más allá de la imagen, sin enfocar la imagen en sí. Hay varias formas de hacerlo:
+- si podés, relajá los ojos a propósito, como si estuvieras mirando a lo lejos
+- otra técnica es empezar con la cabeza muy cerca de la pantalla, tan cerca que no puedas enfocarla. En ese punto los ojos deberían mirar a lo lejos de forma natural. Después alejás la cabeza despacio, sin mirar la pantalla: tratá de seguir mirando al vacío
+- otra es usar un objeto, como una lapicera: ponela detrás de la pantalla, de costado, para poder verla. Seguí mirándola y acercala despacio hacia el centro de la pantalla. Eso ayuda a mirar más allá de la pantalla.
 
-If you cannot quite see a clear 3D object but you still feel something weird, you are certainly on good track.
+Si no llegás a ver un objeto 3D nítido pero igual sentís algo raro, vas por buen camino.
 
-### Exercises
-Below are images you can practice on while training. For each of them, you need to have the correct way of looking at them.
-
-<div style="text-align:center;margin:48px 0">
-    <p>
-        <i>Try to relax your eyes, and you should see a third black dot appear in the middle.</i>
-    </p>
-    <img alt="First practice image" src="src/readme/tutorial_easy.png"/>
-</div>
+### Ejercicios
+Estas imágenes sirven para practicar. En cada una hay que mirar de la forma correcta.
 
 <div style="text-align:center;margin:48px 0">
     <p>
-        <i>Practice your look on this image, and you should see each row float at a different depth: the daisies look far away, the red flowers are a bit closer, then the blue butterfly, and finally the yellow flowers are the closest.</i>
+        <i>Relajá los ojos y deberías ver aparecer un tercer punto negro en el medio.</i>
     </p>
-    <img alt="Second practice image" src="src/readme/tutorial_medium.png"/>
+    <img alt="Primera imagen de práctica" src="src/readme/tutorial_easy.png"/>
 </div>
 
 <div style="text-align:center;margin:48px 0">
     <p>
-        <i>This is the last practice image. If you look at it correctly, you should clearly see a 3D object.</i>
+        <i>Practicá la mirada con esta imagen. Cada fila debería flotar a una profundidad distinta: las margaritas se ven lejos, las flores rojas un poco más cerca, después la mariposa azul, y las flores amarillas son las más cercanas.</i>
     </p>
-    <img alt="Last practice image" src="src/readme/tutorial_hard.jpg"/>
+    <img alt="Segunda imagen de práctica" src="src/readme/tutorial_medium.png"/>
 </div>
 
-## How does it work
-### Base idea
-
-The brain perceives depth by combining the two slightly different images coming from our eyes. If an object looks exactly the same from both eyes, it means the object is far in the distance. On the contrary, if an object looks very different from each eye, it means the eyes each have a different perspective on it, so the object must be very close.
-
-Since depth perception is based on binocular vision, if we want the show a 3D object in our 2D image, we must trick the brain into thinking each eye sees a different perspective of our 3D object. If you look directly at the image, it does not work: the brain clearly sees the image is 2D. So the viewer has to focus a point either before the image, or behind it.
-
-Now, we must understand how to build the image. Let's see what happens if someones looks at an object through a transparent screen:
-
-<div style="text-align:center">
-    <img alt="Depth creates repetition" src="src/readme/diagram-01.png"/>
+<div style="text-align:center;margin:48px 0">
     <p>
-        <i>As you can see, there are two "ghosts" of the object on the screen, because of the eyes having different positions relatively to the object.</i>
+        <i>Esta es la última imagen de práctica. Si la mirás bien, deberías ver con claridad un objeto 3D.</i>
     </p>
+    <img alt="Última imagen de práctica" src="src/readme/tutorial_hard.jpg"/>
 </div>
 
-Now let's compare two situations: one object is near and the other is far away:
+## Cómo funciona
+### Idea de base
+
+El cerebro percibe la profundidad combinando las dos imágenes levemente distintas que llegan de los ojos. Si un objeto se ve igual desde los dos ojos, está lejos. Si se ve muy distinto desde cada ojo, cada ojo tiene una perspectiva diferente, así que el objeto está cerca.
+
+Como la percepción de profundidad se basa en la visión binocular, para mostrar un objeto 3D en una imagen 2D hay que hacerle creer al cerebro que cada ojo ve una perspectiva distinta. Si mirás la imagen de frente, no funciona: el cerebro ve con claridad que es 2D. Por eso hay que enfocar un punto delante de la imagen, o detrás.
+
+Para construir la imagen, veamos qué pasa si alguien mira un objeto a través de una pantalla transparente:
 
 <div style="text-align:center">
-    <img alt="Repetition period vary with distance" src="src/readme/diagram-02.png"/>
+    <img alt="La profundidad crea una repetición" src="src/readme/diagram-01.png"/>
     <p>
-        <i>The closer an object is to the screen, the closer its ghosts are on the screen.</i>
+        <i>Hay dos "fantasmas" del objeto sobre la pantalla, porque los ojos están en posiciones distintas respecto del objeto.</i>
     </p>
 </div>
 
-In conclusion, provided the viewer does not look directly at the image but beyond it, if we repeat some pattern on the image, the brain will interpret it as the pattern actually being behind the screen. Moreover, by changing the frequency of the repetitions, we can create an impression of relative depth: a pattern with close repetitions will appear closer than a pattern with distanced repetitions. This explains why on the image below, the daisies appear further away than the butterflies.
+Comparemos dos situaciones: un objeto cerca y otro lejos:
 
 <div style="text-align:center">
-    <img alt="Depth perception and repetition frequency" src="src/readme/tutorial_medium.png"/>
+    <img alt="El período de repetición cambia con la distancia" src="src/readme/diagram-02.png"/>
     <p>
-        <i>When looking beyond this image, the daisies appear further away than the butterflies because of the difference in repetition frequency.</i>
+        <i>Cuanto más cerca está el objeto de la pantalla, más cerca quedan sus fantasmas.</i>
     </p>
 </div>
 
-Another interesting property is that only one repetition is needed to perceive depth. This means that on a same row, we can vary the perceived depth by changing the frequency of the repetitions, creating a slope effect.
+En conclusión, si no mirás la imagen de frente sino más allá, al repetir un patrón el cerebro lo interpreta como si ese patrón estuviera detrás de la pantalla. Además, al cambiar la frecuencia de las repeticiones se puede dar una impresión de profundidad relativa: un patrón con repeticiones cercanas parece más cerca que uno con repeticiones más espaciadas. Por eso, en la imagen de abajo, las margaritas parecen más lejos que las mariposas.
 
 <div style="text-align:center">
-    <img alt="We can change depth on a single row" src="src/readme/frequency-change.png"/>
+    <img alt="Percepción de profundidad y frecuencia de repetición" src="src/readme/tutorial_medium.png"/>
     <p>
-        <i>On each row, the repetition frequency varies. This gives the perception of depth variation on each row.</i>
+        <i>Al mirar más allá de esta imagen, las margaritas parecen más lejos que las mariposas por la diferencia en la frecuencia de repetición.</i>
     </p>
 </div>
 
-### Algorithm
-We want to generate an autostereogram given the following inputs:
-- a depth map encoded as a black and white image, in this example a sphere;
-- a base pattern, in this example a seamless clouds texture.
-
-Since this is all about repetition, let's define our base repetition period in pixels. Then let's split our target image into vertical stripes, each having the repetition period as width.
+Otra propiedad útil es que alcanza con una sola repetición para percibir profundidad. En una misma fila se puede variar la profundidad percibida cambiando la frecuencia de las repeticiones, y eso crea un efecto de pendiente.
 
 <div style="text-align:center">
-    <img alt="Image split in stripes" src="src/readme/demo_stripes_empty.png"/>
+    <img alt="Se puede cambiar la profundidad en una sola fila" src="src/readme/frequency-change.png"/>
     <p>
-        <i>Target image split into 5 vertical stripes, plus the reference stripe on the left.</i>
+        <i>En cada fila, la frecuencia de repetición varía. Eso da la percepción de un cambio de profundidad a lo largo de la fila.</i>
     </p>
 </div>
 
-Since this is all about repetition, let's make each stripe a repetition of the previous one. The far-left stripe serves as reference:
+### Algoritmo
+Queremos generar un autoestereograma a partir de:
+- un mapa de profundidad, una imagen en blanco y negro, en este ejemplo una esfera;
+- un patrón de base, en este ejemplo una textura continua de nubes.
+
+Como todo se trata de repetición, definimos un período de repetición en píxeles. Después partimos la imagen en franjas verticales, cada una con ese período de ancho.
 
 <div style="text-align:center">
-    <img alt="Repetition without displacement" src="src/readme/demo_stripes.png"/>
+    <img alt="Imagen partida en franjas" src="src/readme/demo_stripes_empty.png"/>
     <p>
-        <i>By repeating the first stripe without displacement, the viewer only perceives a flat surface.</i>
+        <i>Imagen partida en 5 franjas verticales, más la franja de referencia a la izquierda.</i>
     </p>
 </div>
 
-Now we want to make it 3D, so let's introduce horizontal displacement: each stripe will be a displaced version of the previous one. Each pixel has a distinct local displacement, given by sampling the depth map at that position. Since the far-left stripe is the first one, it does not have a reference so it will not be deformed. However I do not want to truncate the depth map, so just scale it down and shift it to the right so that all of it is sampled.
+Hacemos que cada franja sea una repetición de la anterior. La franja de la izquierda sirve de referencia:
 
 <div style="text-align:center">
-    <img alt="Repetition with displacement" src="src/readme/demo_final.png"/>
+    <img alt="Repetición sin desplazamiento" src="src/readme/demo_stripes.png"/>
     <p>
-        <i>By repeating the first stripe and adding with displacement, the viewer perceives the 3D objects.</i>
+        <i>Al repetir la primera franja sin desplazamiento, solo se percibe una superficie plana.</i>
     </p>
 </div>
 
-In the end, every pixel on the image is a displaced version of the source stripe. Here is an illustration to better see the displacement:
+Para que sea 3D, agregamos un desplazamiento horizontal: cada franja es una versión desplazada de la anterior. Cada píxel tiene su propio desplazamiento, tomado del mapa de profundidad en esa posición. La franja de la izquierda es la primera, así que no tiene referencia y no se deforma. Para no recortar el mapa de profundidad, se lo achica y se lo corre a la derecha, de modo que se use completo.
 
 <div style="text-align:center">
-    <img alt="Repetition with displacement" src="src/readme/demo_uv.png"/>
+    <img alt="Repetición con desplazamiento" src="src/readme/demo_final.png"/>
     <p>
-        <i>By displaying the UV coordinates the tile will be sampled at, the displacement is more visible. One can clearly see the sphere-shaped displacement sampled from the depth map.</i>
+        <i>Al repetir la primera franja y sumarle un desplazamiento, se perciben los objetos 3D.</i>
+    </p>
+</div>
+
+Al final, cada píxel de la imagen es una versión desplazada de la franja de origen. Esta ilustración muestra mejor el desplazamiento:
+
+<div style="text-align:center">
+    <img alt="Repetición con desplazamiento" src="src/readme/demo_uv.png"/>
+    <p>
+        <i>Al mostrar las coordenadas UV en las que se muestrea el patrón, el desplazamiento se ve con más claridad. Se distingue la forma de esfera tomada del mapa de profundidad.</i>
     </p>
 </div>
